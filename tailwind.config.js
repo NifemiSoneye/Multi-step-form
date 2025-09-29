@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        step1: "url('./src/assets/bg-sidebar-desktop.svg')",
-        step2: "url('./src/assets/bg-sidebar-mobile.svg')",
+        step1: "url('/bg-sidebar-desktop.svg')",
+        step2: "url('/bg-sidebar-mobile.svg')",
       },
     },
   },
