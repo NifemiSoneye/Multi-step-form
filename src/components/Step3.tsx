@@ -133,9 +133,9 @@ const Step3 = ({
       };
     });
   }, [formData.plan.billing]);
-  useEffect(() => {
+  /*   useEffect(() => {
     console.log("Updated Data:", formData);
-  }, [formData]);
+  }, [formData]); */
   const unPicked =
     "flex items-center justify-between border border-[#9699ab] rounded-lg p-[0.5rem] lg:p-[0.75rem] hover:border-[#473dffff] ";
   const picked =

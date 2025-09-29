@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import SideNav from "./SideNav";
 
 type AddOnsType = {
@@ -108,9 +107,9 @@ const Step2 = ({
       }));
     }
   };
-  useEffect(() => {
+  /*   useEffect(() => {
     console.log("Updated Data:", formData);
-  }, [formData]);
+  }, [formData]); */
   const handleToggle = () => {
     setIsYearly((prev) => {
       const newIsYearly = !prev;
