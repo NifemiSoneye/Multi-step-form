@@ -124,9 +124,7 @@ function App() {
         {pageNumber === 1 && (
           <Step1
             pageNumber={pageNumber}
-            formData={formData}
             error={error}
-            setFormData={setFormData}
             handleNext={handleNext}
             activePage={activePage}
             linkBase={linkBase}

@@ -1,5 +1,7 @@
 import SideNav from "./SideNav";
-
+import { useSelector, useDispatch } from "react-redux";
+import { setPersonalInfo } from "../store/formSlice";
+import { type RootState } from "../store/store";
 type AddOnsType = {
   onlineService: boolean;
   largerStorage: boolean;
@@ -12,23 +14,9 @@ type AddOnsType = {
   };
 };
 
-type FormDataType = {
-  Name: string;
-  Email: string;
-  Phone: string;
-  plan: {
-    name: string;
-    price: number;
-    billing: string;
-  };
-  addOns: AddOnsType;
-};
-
 type PropType = {
   pageNumber: number;
-  formData: FormDataType;
   error: { Name: boolean; Email: boolean; Phone: boolean; Plan: boolean };
-  setFormData: React.Dispatch<React.SetStateAction<FormDataType>>;
   handleNext: () => void;
   activePage: string;
   linkBase: string;
@@ -36,16 +24,22 @@ type PropType = {
 };
 const Step1 = ({
   pageNumber,
-  formData,
   error,
-  setFormData,
   handleNext,
   activePage,
   linkBase,
   normalWhiteSpace,
 }: PropType) => {
+  const formData = useSelector((state: RootState) => state.form);
+
+  const dispatch = useDispatch();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    dispatch(
+      setPersonalInfo({
+        field: e.target.name,
+        value: e.target.value,
+      })
+    );
   };
 
   return (
