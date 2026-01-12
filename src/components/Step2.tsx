@@ -1,39 +1,15 @@
 import React, { useState } from "react";
 import SideNav from "./SideNav";
-
-type AddOnsType = {
-  onlineService: boolean;
-  largerStorage: boolean;
-  customizableProfile: boolean;
-  price: {
-    onlineServicePrice: number;
-    largerStoragePrice: number;
-    customizableProfilePrice: number;
-    total: number;
-  };
-};
-
-type FormDataType = {
-  Name: string;
-  Email: string;
-  Phone: string;
-  plan: {
-    name: string;
-    price: number;
-    billing: string;
-  };
-  addOns: AddOnsType;
-};
+import { useSelector, useDispatch } from "react-redux";
+import { setPlan } from "../store/formSlice";
+import { toggleBillingCycle } from "../store/navigationSlice";
+import { type RootState } from "../store/store";
 
 type PropType = {
   pageNumber: number;
   handleNext: () => void;
   handlePrevious: () => void;
-  formData: FormDataType;
-  setFormData: React.Dispatch<React.SetStateAction<FormDataType>>;
   error: { Name: boolean; Email: boolean; Phone: boolean; Plan: boolean };
-  isYearly: boolean;
-  setIsYearly: React.Dispatch<React.SetStateAction<boolean>>;
   activePage: string;
   linkBase: string;
   longerWhiteSpace: string;
@@ -43,15 +19,14 @@ const Step2 = ({
   pageNumber,
   handleNext,
   handlePrevious,
-  formData,
-  setFormData,
   error,
-  isYearly,
-  setIsYearly,
   activePage,
   linkBase,
   longerWhiteSpace,
 }: PropType) => {
+  const formData = useSelector((state: RootState) => state.form);
+  const isYearly = useSelector((state: RootState) => state.navigation.isYearly);
+  const dispatch = useDispatch();
   const arcadeIcon = new URL("../assets/icon-arcade.svg", import.meta.url).href;
   const advancedIcon = new URL("../assets/icon-advanced.svg", import.meta.url)
     .href;
@@ -87,31 +62,29 @@ const Step2 = ({
           break;
       }
       setSelect(option);
-      setFormData((prev) => ({
-        ...prev,
-        plan: {
-          ...prev.plan,
-          ...chosenPlan,
-          billing: isYearly ? "yearly" : "Monthly",
-        },
-      }));
+      dispatch(
+        setPlan({
+          name: chosenPlan.name,
+          price: chosenPlan.price,
+          billing: !isYearly ? "yearly" : "Monthly",
+        })
+      );
     } else {
       setSelect(0);
-      setFormData((prev) => ({
-        ...prev,
-        plan: {
+      dispatch(
+        setPlan({
           name: "",
           price: 0,
           billing: "Monthly",
-        },
-      }));
+        })
+      );
     }
   };
   /*   useEffect(() => {
     console.log("Updated Data:", formData);
   }, [formData]); */
   const handleToggle = () => {
-    setIsYearly((prev) => {
+    /* setIsYearly((prev) => {
       const newIsYearly = !prev;
 
       // reset plan in both local state and parent formData
@@ -126,7 +99,16 @@ const Step2 = ({
       }));
 
       return newIsYearly;
-    });
+    }); */
+    dispatch(toggleBillingCycle());
+    setSelect(0);
+    dispatch(
+      setPlan({
+        name: "",
+        price: 0,
+        billing: isYearly ? "yearly" : "Monthly",
+      })
+    );
   };
   return (
     <div className={longerWhiteSpace}>
