@@ -1,34 +1,11 @@
 import React from "react";
 import SideNav from "./SideNav";
-
-type AddOnsType = {
-  onlineService: boolean;
-  largerStorage: boolean;
-  customizableProfile: boolean;
-  price: {
-    onlineServicePrice: number;
-    largerStoragePrice: number;
-    customizableProfilePrice: number;
-    total: number;
-  };
-};
-
-type FormDataType = {
-  Name: string;
-  Email: string;
-  Phone: string;
-  plan: {
-    name: string;
-    price: number;
-    billing: string;
-  };
-  addOns: AddOnsType;
-};
+import { useSelector, useDispatch } from "react-redux";
+import { goToPage } from "../store/navigationSlice";
+import { type RootState } from "../store/store";
 
 type PropType = {
   pageNumber: number;
-  formData: FormDataType;
-  setPageNumber: React.Dispatch<React.SetStateAction<number>>;
   handleNext: () => void;
   handlePrevious: () => void;
   activePage: string;
@@ -38,14 +15,14 @@ type PropType = {
 
 const Step4 = ({
   pageNumber,
-  formData,
-  setPageNumber,
   handlePrevious,
   handleNext,
   activePage,
   linkBase,
   normalWhiteSpace,
 }: PropType) => {
+  const formData = useSelector((state: RootState) => state.form);
+  const dispatch = useDispatch();
   return (
     <div className={normalWhiteSpace}>
       <SideNav
@@ -65,7 +42,7 @@ const Step4 = ({
           <div className="flex justify-between items-center">
             <p
               className="text-[#9699ab] underline text-[14px] cursor-pointer hover:text-[#473dffff]"
-              onClick={() => setPageNumber(2)}
+              onClick={() => dispatch(goToPage(2))}
             >
               Change
             </p>

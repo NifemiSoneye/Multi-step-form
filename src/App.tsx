@@ -136,11 +136,7 @@ function App() {
             pageNumber={pageNumber}
             handleNext={handleNext}
             handlePrevious={handlePrevious}
-            formData={formData}
-            setFormData={setFormData}
             error={error}
-            isYearly={isYearly}
-            setIsYearly={setIsYearly}
             activePage={activePage}
             linkBase={linkBase}
             longerWhiteSpace={longerWhiteSpace}
@@ -149,11 +145,8 @@ function App() {
         {pageNumber === 3 && (
           <Step3
             pageNumber={pageNumber}
-            isYearly={isYearly}
             handleNext={handleNext}
             handlePrevious={handlePrevious}
-            formData={formData}
-            setFormData={setFormData}
             error={error}
             activePage={activePage}
             linkBase={linkBase}
@@ -163,8 +156,6 @@ function App() {
         {pageNumber === 4 && (
           <Step4
             pageNumber={pageNumber}
-            setPageNumber={setPageNumber}
-            formData={formData}
             handleNext={handleNext}
             handlePrevious={handlePrevious}
             activePage={activePage}
