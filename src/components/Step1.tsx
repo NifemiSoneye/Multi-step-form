@@ -2,17 +2,6 @@ import SideNav from "./SideNav";
 import { useSelector, useDispatch } from "react-redux";
 import { setPersonalInfo } from "../store/formSlice";
 import { type RootState } from "../store/store";
-type AddOnsType = {
-  onlineService: boolean;
-  largerStorage: boolean;
-  customizableProfile: boolean;
-  price: {
-    onlineServicePrice: number;
-    largerStoragePrice: number;
-    customizableProfilePrice: number;
-    total: number;
-  };
-};
 
 type PropType = {
   pageNumber: number;

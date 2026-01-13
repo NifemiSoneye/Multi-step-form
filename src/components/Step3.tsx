@@ -1,5 +1,8 @@
 import { useEffect } from "react";
 import SideNav from "./SideNav";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleAddOn, recalculateAddOnPrices } from "../store/formSlice";
+import { type RootState } from "../store/store";
 
 type ErrorType = {
   Name: boolean;
@@ -9,37 +12,10 @@ type ErrorType = {
   addOns: boolean;
 };
 
-type AddOnsType = {
-  onlineService: boolean;
-  largerStorage: boolean;
-  customizableProfile: boolean;
-  price: {
-    onlineServicePrice: number;
-    largerStoragePrice: number;
-    customizableProfilePrice: number;
-    total: number;
-  };
-};
-
-type FormDataType = {
-  Name: string;
-  Email: string;
-  Phone: string;
-  plan: {
-    name: string;
-    price: number;
-    billing: string;
-  };
-  addOns: AddOnsType;
-};
-
 type PropType = {
   pageNumber: number;
-  isYearly: boolean;
   handleNext: () => void;
   handlePrevious: () => void;
-  formData: FormDataType;
-  setFormData: React.Dispatch<React.SetStateAction<FormDataType>>;
   error: ErrorType;
   activePage: string;
   linkBase: string;
@@ -48,91 +24,30 @@ type PropType = {
 
 const Step3 = ({
   pageNumber,
-  isYearly,
   handleNext,
   handlePrevious,
-  formData,
-  setFormData,
   error,
   activePage,
   linkBase,
   normalWhiteSpace,
 }: PropType) => {
+  const formData = useSelector((state: RootState) => state.form);
+  const dispatch = useDispatch();
+  const isYearly = useSelector((state: RootState) => state.navigation.isYearly);
   const checkIcon = new URL("../assets/icon-checkmark.svg", import.meta.url)
     .href;
   const handleTick = (option: number) => {
-    setFormData((prev) => {
-      let UpdatedAddOns = { ...prev.addOns };
-
-      if (option === 1) {
-        UpdatedAddOns.onlineService = !UpdatedAddOns.onlineService;
-        UpdatedAddOns.price.onlineServicePrice = UpdatedAddOns.onlineService
-          ? prev.plan.billing === "Monthly"
-            ? 1
-            : 10
-          : 0;
-      } else if (option === 2) {
-        UpdatedAddOns.largerStorage = !UpdatedAddOns.largerStorage;
-        UpdatedAddOns.price.largerStoragePrice = UpdatedAddOns.largerStorage
-          ? prev.plan.billing === "Monthly"
-            ? 2
-            : 20
-          : 0;
-      } else if (option === 3) {
-        UpdatedAddOns.customizableProfile = !UpdatedAddOns.customizableProfile;
-        UpdatedAddOns.price.customizableProfilePrice =
-          UpdatedAddOns.customizableProfile
-            ? prev.plan.billing === "Monthly"
-              ? 2
-              : 20
-            : 0;
-      }
-      UpdatedAddOns.price.total =
-        formData.plan.price +
-        UpdatedAddOns.price.customizableProfilePrice +
-        UpdatedAddOns.price.largerStoragePrice +
-        UpdatedAddOns.price.onlineServicePrice;
-      return { ...prev, addOns: UpdatedAddOns };
-    });
+    if (option === 1) {
+      dispatch(toggleAddOn("onlineService"));
+    } else if (option === 2) {
+      dispatch(toggleAddOn("largerStorage"));
+    } else if (option === 3) {
+      dispatch(toggleAddOn("customizableProfile"));
+    }
   };
   useEffect(() => {
-    setFormData((prev) => {
-      const { onlineService, largerStorage, customizableProfile } = prev.addOns;
-
-      const updatedPrices = {
-        onlineServicePrice: onlineService
-          ? prev.plan.billing === "Monthly"
-            ? 1
-            : 10
-          : 0,
-        largerStoragePrice: largerStorage
-          ? prev.plan.billing === "Monthly"
-            ? 2
-            : 20
-          : 0,
-        customizableProfilePrice: customizableProfile
-          ? prev.plan.billing === "Monthly"
-            ? 2
-            : 20
-          : 0,
-      };
-
-      return {
-        ...prev,
-        addOns: {
-          ...prev.addOns,
-          price: {
-            ...updatedPrices,
-            total:
-              formData.plan.price +
-              updatedPrices.onlineServicePrice +
-              updatedPrices.largerStoragePrice +
-              updatedPrices.customizableProfilePrice,
-          },
-        },
-      };
-    });
-  }, [formData.plan.billing]);
+    dispatch(recalculateAddOnPrices());
+  }, [formData.plan.billing, dispatch]);
   /*   useEffect(() => {
     console.log("Updated Data:", formData);
   }, [formData]); */

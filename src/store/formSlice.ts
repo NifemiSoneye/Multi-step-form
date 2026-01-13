@@ -92,10 +92,32 @@ const formSlice = createSlice({
         state.addOns.price.largerStoragePrice +
         state.addOns.price.customizableProfilePrice;
     },
+recalculateAddOnPrices: (state) => {
+  const isMonthly = state.plan.billing === "Monthly";
+  
+  state.addOns.price.onlineServicePrice = state.addOns.onlineService
+    ? (isMonthly ? 1 : 10)
+    : 0;
+    
+  state.addOns.price.largerStoragePrice = state.addOns.largerStorage
+    ? (isMonthly ? 2 : 20)
+    : 0;
+    
+  state.addOns.price.customizableProfilePrice = state.addOns.customizableProfile
+    ? (isMonthly ? 2 : 20)
+    : 0;
+  
+  // Recalculate total
+  state.addOns.price.total =
+    state.plan.price +
+    state.addOns.price.onlineServicePrice +
+    state.addOns.price.largerStoragePrice +
+    state.addOns.price.customizableProfilePrice;
+}
   },
 });
 
-export const { setPersonalInfo, setPlan, toggleAddOn } = formSlice.actions;
+export const { setPersonalInfo, setPlan, toggleAddOn , recalculateAddOnPrices } = formSlice.actions;
 
 // Export reducer
 export default formSlice.reducer;
