@@ -1,4 +1,3 @@
-import React from "react";
 import SideNav from "./SideNav";
 import { useSelector, useDispatch } from "react-redux";
 import { goToPage } from "../store/navigationSlice";
@@ -23,6 +22,9 @@ const Step4 = ({
 }: PropType) => {
   const formData = useSelector((state: RootState) => state.form);
   const dispatch = useDispatch();
+  console.log("Plan billing:", formData.plan.billing);
+  console.log("Is it 'Monthly'?", formData.plan.billing === "Monthly");
+  console.log("Is it 'yearly'?", formData.plan.billing === "yearly");
   return (
     <div className={normalWhiteSpace}>
       <SideNav

@@ -6,6 +6,9 @@ import Step2 from "./components/Step2";
 import Step3 from "./components/Step3";
 import Step4 from "./components/Step4";
 import Step5 from "./components/Step5";
+import { useSelector, useDispatch } from "react-redux";
+import { nextPage, previousPage } from "./store/navigationSlice";
+import { type RootState } from "./store/store";
 type ErrorType = {
   Name: boolean;
   Email: boolean;
@@ -13,53 +16,14 @@ type ErrorType = {
   Plan: boolean;
   addOns: boolean;
 };
-type AddOnsType = {
-  onlineService: boolean;
-  largerStorage: boolean;
-  customizableProfile: boolean;
-  price: {
-    onlineServicePrice: number;
-    largerStoragePrice: number;
-    customizableProfilePrice: number;
-    total: number;
-  };
-};
-type FormDataType = {
-  Name: string;
-  Email: string;
-  Phone: string;
-  plan: {
-    name: string;
-    price: number;
-    billing: string;
-  };
-  addOns: AddOnsType;
-};
 
 function App() {
-  const [isYearly, setIsYearly] = useState<boolean>(false);
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const [formData, setFormData] = useState<FormDataType>({
-    Name: "",
-    Email: "",
-    Phone: "",
-    plan: {
-      name: "",
-      price: 0,
-      billing: "Monthly", // or "yearly"
-    },
-    addOns: {
-      onlineService: false,
-      largerStorage: false,
-      customizableProfile: false,
-      price: {
-        onlineServicePrice: 0,
-        largerStoragePrice: 0,
-        customizableProfilePrice: 0,
-        total: 0,
-      },
-    },
-  });
+  const formData = useSelector((state: RootState) => state.form);
+  const pageNumber = useSelector(
+    (state: RootState) => state.navigation.pageNumber
+  );
+  const isYearly = useSelector((state: RootState) => state.navigation.isYearly);
+  const dispatch = useDispatch();
   const [error, setError] = useState<ErrorType>({
     Name: false,
     Email: false,
@@ -79,7 +43,7 @@ function App() {
       setError(newErrors);
 
       if (!Object.values(newErrors).some(Boolean)) {
-        setPageNumber((prev) => prev + 1);
+        dispatch(nextPage());
       }
     } else if (pageNumber === 2) {
       if (!formData.plan.name) {
@@ -87,7 +51,7 @@ function App() {
         return;
       }
       setError((prev) => ({ ...prev, Plan: false }));
-      setPageNumber((prev) => prev + 1);
+      dispatch(nextPage());
     } else if (pageNumber === 3) {
       const { onlineService, largerStorage, customizableProfile } =
         formData.addOns;
@@ -99,12 +63,12 @@ function App() {
       }
 
       setError((prev) => ({ ...prev, addOns: false }));
-      setPageNumber((prev) => prev + 1);
+      dispatch(nextPage());
     } else if (pageNumber === 4) {
-      setPageNumber((prev) => prev + 1);
+      dispatch(nextPage());
     }
   };
-  const handlePrevious = (): void => setPageNumber((prev) => prev - 1);
+  const handlePrevious = () => dispatch(previousPage());
   const activePage =
     "bg-[#bfe2fdff] text-black w-7 h-7 rounded-full border border-white flex items-center justify-center m-[0.5rem]";
   const linkBase =
@@ -165,17 +129,12 @@ function App() {
         )}
         {pageNumber === 5 && (
           <Step5
-            pageNumber={pageNumber}
             activePage={activePage}
             linkBase={linkBase}
             normalWhiteSpace={normalWhiteSpace}
           />
         )}
-        <Footer
-          pageNumber={pageNumber}
-          setPageNumber={setPageNumber}
-          handleNext={handleNext}
-        />
+        <Footer handleNext={handleNext} />
       </div>
     </>
   );
