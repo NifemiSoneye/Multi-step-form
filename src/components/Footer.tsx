@@ -1,13 +1,16 @@
-import React from "react";
+
+import { useDispatch, useSelector } from "react-redux";
+import { previousPage } from "../store/navigationSlice";
+import { type RootState } from "../store/store";
 type PropType = {
-  pageNumber: number;
-  setPageNumber: React.Dispatch<React.SetStateAction<number>>;
   handleNext: () => void;
 };
 
-const Footer = ({ pageNumber, setPageNumber, handleNext }: PropType) => {
+const Footer = ({ handleNext }: PropType) => {
+  const pageNumber = useSelector((state : RootState) => state.navigation.pageNumber )
+  const dispatch = useDispatch();
   const handlePrevious = () => {
-    setPageNumber((prev) => prev - 1);
+    dispatch(previousPage());
   };
   return (
     <>

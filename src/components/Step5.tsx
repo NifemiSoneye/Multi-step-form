@@ -1,18 +1,17 @@
 import SideNav from "./SideNav";
+import { useSelector } from "react-redux";
+import { type RootState } from "../store/store";
 
 type PropType = {
-  pageNumber: number;
   activePage: string;
   linkBase: string;
   normalWhiteSpace: string;
 };
 
-const Step5 = ({
-  pageNumber,
-  activePage,
-  linkBase,
-  normalWhiteSpace,
-}: PropType) => {
+const Step5 = ({ activePage, linkBase, normalWhiteSpace }: PropType) => {
+  const pageNumber = useSelector(
+    (state: RootState) => state.navigation.pageNumber
+  );
   const thankIcon = new URL("../assets/icon-thank-you.svg", import.meta.url)
     .href;
   return (

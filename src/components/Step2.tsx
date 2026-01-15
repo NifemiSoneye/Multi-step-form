@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import SideNav from "./SideNav";
 import { useSelector, useDispatch } from "react-redux";
 import { setPlan } from "../store/formSlice";
 import { toggleBillingCycle } from "../store/navigationSlice";
 import { type RootState } from "../store/store";
+import { recalculateAddOnPrices } from "../store/formSlice";
 
 type PropType = {
   pageNumber: number;
@@ -66,7 +67,7 @@ const Step2 = ({
         setPlan({
           name: chosenPlan.name,
           price: chosenPlan.price,
-          billing: !isYearly ? "yearly" : "Monthly",
+          billing: isYearly ? "yearly" : "Monthly",
         })
       );
     } else {
@@ -75,7 +76,7 @@ const Step2 = ({
         setPlan({
           name: "",
           price: 0,
-          billing: "Monthly",
+          billing: isYearly ? "yearly" : "Monthly",
         })
       );
     }
@@ -106,9 +107,10 @@ const Step2 = ({
       setPlan({
         name: "",
         price: 0,
-        billing: isYearly ? "yearly" : "Monthly",
+        billing: !isYearly ? "yearly" : "Monthly",
       })
     );
+    dispatch(recalculateAddOnPrices());
   };
   return (
     <div className={longerWhiteSpace}>
